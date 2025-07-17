@@ -1,23 +1,36 @@
-# Usar una imagen base de Node.js
-FROM node:18
+# Etapa 1: Build
+FROM node:18-alpine AS builder
 
-# Establecer el directorio de trabajo dentro del contenedor
+# Establece el directorio de trabajo
 WORKDIR /app
 
-# Copiar package.json y package-lock.json para instalar dependencias
+# Copia los archivos necesarios
 COPY package*.json ./
+COPY tsconfig*.json ./
+COPY vite.config.ts ./
+COPY src ./src
+COPY public ./public
 
-# Instalar dependencias
+# Instala dependencias
 RUN npm install
 
-# Copiar el resto de los archivos
-COPY . .
-
-# Compilar el código TypeScript
+# Compila la app
 RUN npm run build
 
-# Exponer el puerto en el que corre el servicio
-EXPOSE 5173
+# Etapa 2: Servidor estático
+FROM node:18-alpine
 
-# Comando para iniciar la aplicación compilada
-CMD ["npx", "tsx", "dist/index.js"]
+# Instala 'serve' para servir archivos estáticos
+RUN npm install -g serve
+
+# Crea un directorio para la app
+WORKDIR /app
+
+# Copia archivos compilados desde la etapa anterior
+COPY --from=builder /app/dist ./dist
+
+# Expone el puerto 3000
+EXPOSE 3000
+
+# Comando para servir el contenido estático
+CMD ["serve", "-s", "dist", "-l", "3000"]
