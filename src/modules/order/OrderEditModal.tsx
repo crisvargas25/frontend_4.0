@@ -2,7 +2,7 @@
 import { Modal, Switch, Button, Typography, Space, Tag, Input } from 'antd';
 import { useState, useEffect } from 'react';
 
-const { Text, Title } = Typography;
+const { Text } = Typography;
 
 interface OrderEditModalProps {
   visible: boolean;

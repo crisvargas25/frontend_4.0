@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Table, Typography, Input, Modal, Button } from 'antd';
+import { Table, Typography, Input, Button } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import Swal from 'sweetalert2';
 import UserEditModal from './UserEditModal'; // Ajusta la ruta según tu estructura
