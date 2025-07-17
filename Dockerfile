@@ -4,10 +4,12 @@ FROM node:18-alpine AS builder
 # Establece el directorio de trabajo
 WORKDIR /app
 
+
 # Copia los archivos necesarios
 COPY package*.json ./
 COPY tsconfig*.json ./
 COPY vite.config.ts ./
+COPY index.html ./       
 COPY src ./src
 COPY public ./public
 
