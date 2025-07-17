@@ -65,7 +65,7 @@ const columns: ColumnsType<any> = [
     const fetchUsers = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:3000/api/auth/getall');
+        const response = await fetch('https://apps40-production.up.railway.app/api/auth/getall');
         if (!response.ok) throw new Error('Error al obtener usuarios');
         const data = await response.json();
         setUsers(
@@ -123,7 +123,7 @@ const columns: ColumnsType<any> = [
       let response;
       if (!editedUser.id) {
         // Crear nuevo usuario
-        response = await fetch('http://localhost:3000/api/auth/register', {
+        response = await fetch('https://apps40-production.up.railway.app/api/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -141,7 +141,7 @@ const columns: ColumnsType<any> = [
       } else {
         // Actualizar usuario existente
         response = await fetch(
-          `http://localhost:3000/api/auth/update?email=${encodeURIComponent(editedUser.email)}`,
+          `https://apps40-production.up.railway.app/api/auth/update?email=${encodeURIComponent(editedUser.email)}`,
           {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },

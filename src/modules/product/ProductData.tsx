@@ -58,7 +58,7 @@ const columns: ColumnsType<any> = [
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:3000/api/products/getall');
+        const response = await fetch('https://apps40-production.up.railway.app/api/products/getall');
         if (!response.ok) throw new Error('Error al obtener productos');
         const data = await response.json();
         setProducts(
@@ -116,7 +116,7 @@ const columns: ColumnsType<any> = [
       let response;
       if (!editedProduct.id) {
         // Crear nuevo producto
-        response = await fetch('http://localhost:3000/api/products/create', {
+        response = await fetch('https://apps40-production.up.railway.app/api/products/create', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -130,7 +130,7 @@ const columns: ColumnsType<any> = [
       } else {
         // Actualizar producto existente
         response = await fetch(
-          `http://localhost:3000/api/products/update/${encodeURIComponent(editedProduct.id)}`,
+          `https://apps40-production.up.railway.app/api/products/update/${encodeURIComponent(editedProduct.id)}`,
           {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },

@@ -65,7 +65,7 @@ export default function OrderList() {
     const fetchOrders = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:3000/api/orders/getall');
+        const response = await fetch('https://apps40-production.up.railway.app/api/orders/getall');
         if (!response.ok) throw new Error('Error al obtener órdenes');
         const data = await response.json();
         setOrders(
@@ -126,7 +126,7 @@ export default function OrderList() {
       let response = null;
       if (!editedOrder.id) {
         // Crear nueva orden
-        response = await fetch('http://localhost:3000/api/orders/create', {
+        response = await fetch('https://apps40-production.up.railway.app/api/orders/create', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -149,7 +149,7 @@ export default function OrderList() {
         });
         if (!confirmCancel.isConfirmed) return;
         response = await fetch(
-          `http://localhost:3000/api/orders/delete/${encodeURIComponent(editedOrder.id)}`,
+          `https://apps40-production.up.railway.app/api/orders/delete/${encodeURIComponent(editedOrder.id)}`,
           {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
@@ -166,7 +166,7 @@ export default function OrderList() {
         });
         if (!confirmComplete.isConfirmed) return;
         response = await fetch(
-          `http://localhost:3000/api/orders/update/${encodeURIComponent(editedOrder.id)}`,
+          `https://apps40-production.up.railway.app/api/orders/update/${encodeURIComponent(editedOrder.id)}`,
           {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
