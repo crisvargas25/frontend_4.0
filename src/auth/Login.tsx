@@ -16,7 +16,7 @@ function Login() {
     try {
       setLoading(true);
       const values = await form.validateFields(); // Valida los campos del formulario
-      const response = await fetch('http://localhost:3000/api/auth/login', {
+      const response = await fetch('https://apps40-production.up.railway.app/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(values),
