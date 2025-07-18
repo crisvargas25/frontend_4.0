@@ -1,5 +1,4 @@
-
-import { Modal, Input, Switch, Button } from 'antd';
+import { Modal, Input, Switch, Button, Form, InputNumber } from 'antd';
 import { useState, useEffect } from 'react';
 
 interface ProductEditModalProps {
@@ -30,7 +29,6 @@ export default function ProductEditModal({ visible, product, onCancel, onSave }:
         status: product.status || false,
       });
     } else {
-      // Modo creación: inicializar con valores vacíos
       setEditedProduct({
         id: '',
         name: '',
@@ -53,7 +51,7 @@ export default function ProductEditModal({ visible, product, onCancel, onSave }:
   return (
     <Modal
       title={product ? 'Editar Producto' : 'Agregar Producto'}
-      visible={visible}
+      open={visible}
       onCancel={onCancel}
       footer={[
         <Button key="cancel" onClick={onCancel}>
@@ -64,45 +62,52 @@ export default function ProductEditModal({ visible, product, onCancel, onSave }:
         </Button>,
       ]}
     >
-      <div style={{ marginBottom: 16 }}>
-        <label>Nombre:</label>
-        <Input
-          value={editedProduct.name}
-          onChange={(e) => handleChange('name', e.target.value)}
-        />
-      </div>
-      <div style={{ marginBottom: 16 }}>
-        <label>Descripción:</label>
-        <Input
-          value={editedProduct.description}
-          onChange={(e) => handleChange('description', e.target.value)}
-        />
-      </div>
-      <div style={{ marginBottom: 16 }}>
-        <label>Cantidad:</label>
-        <Input
-          type="number"
-          min={0}
-          value={editedProduct.quantity}
-          onChange={(e) => handleChange('quantity', parseInt(e.target.value) || 0)}
-        />
-      </div>
-      <div style={{ marginBottom: 16 }}>
-        <label>Precio:</label>
-        <Input
-          type="number"
-          min={0}
-          value={editedProduct.price}
-          onChange={(e) => handleChange('price', parseFloat(e.target.value) || 0)}
-        />
-      </div>
-      <div style={{ marginBottom: 16 }}>
-        <label>Estado:</label>
-        <Switch
-          checked={editedProduct.status}
-          onChange={(checked) => handleChange('status', checked)}
-        />
-      </div>
+      <Form layout="vertical">
+        <Form.Item label="Nombre" required>
+          <Input
+            placeholder="Nombre del producto"
+            value={editedProduct.name}
+            onChange={(e) => handleChange('name', e.target.value)}
+          />
+        </Form.Item>
+
+        <Form.Item label="Descripción">
+          <Input
+            placeholder="Descripción breve"
+            value={editedProduct.description}
+            onChange={(e) => handleChange('description', e.target.value)}
+          />
+        </Form.Item>
+
+        <Form.Item label="Cantidad">
+          <InputNumber
+            min={0}
+            style={{ width: '100%' }}
+            value={editedProduct.quantity}
+            onChange={(value) => handleChange('quantity', value || 0)}
+          />
+        </Form.Item>
+
+        <Form.Item label="Precio">
+          <InputNumber
+            min={0}
+            step={0.01}
+            style={{ width: '100%' }}
+            value={editedProduct.price}
+            onChange={(value) => handleChange('price', value || 0)}
+            prefix="$"
+          />
+        </Form.Item>
+
+        <Form.Item label="Estado">
+          <Switch
+            checked={editedProduct.status}
+            onChange={(checked) => handleChange('status', checked)}
+            checkedChildren="Activo"
+            unCheckedChildren="Inactivo"
+          />
+        </Form.Item>
+      </Form>
     </Modal>
   );
 }

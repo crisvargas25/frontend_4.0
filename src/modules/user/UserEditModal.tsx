@@ -1,6 +1,7 @@
-import  { useState, useEffect } from 'react';
-import { Modal, Input, Select, Switch, Button, Input as AntdInput } from 'antd';
-const { Password } = AntdInput;
+import { useState, useEffect } from 'react';
+import { Modal, Input, Select, Switch, Button, Form } from 'antd';
+
+const { Password } = Input;
 const { Option } = Select;
 
 interface UserEditModalProps {
@@ -30,10 +31,9 @@ export default function UserEditModal({ visible, user, onCancel, onSave }: UserE
         phone: user.phone || '',
         role: user.role || '',
         status: user.status || false,
-        password: '', // No se edita la contraseña existente
+        password: '', // No mostrar contraseña existente
       });
     } else {
-      // Modo creación: inicializar con valores vacíos
       setEditedUser({
         id: '',
         name: '',
@@ -57,7 +57,7 @@ export default function UserEditModal({ visible, user, onCancel, onSave }: UserE
   return (
     <Modal
       title={user ? 'Editar Usuario' : 'Agregar Usuario'}
-      visible={visible}
+      open={visible}
       onCancel={onCancel}
       footer={[
         <Button key="cancel" onClick={onCancel}>
@@ -68,55 +68,62 @@ export default function UserEditModal({ visible, user, onCancel, onSave }: UserE
         </Button>,
       ]}
     >
-      <div style={{ marginBottom: 16 }}>
-        <label>Nombre:</label>
-        <Input
-          value={editedUser.name}
-          onChange={(e) => handleChange('name', e.target.value)}
-        />
-      </div>
-      <div style={{ marginBottom: 16 }}>
-        <label>Correo:</label>
-        <Input
-          value={editedUser.email}
-          onChange={(e) => handleChange('email', e.target.value)}
-        />
-      </div>
-      <div style={{ marginBottom: 16 }}>
-        <label>Teléfono:</label>
-        <Input
-          value={editedUser.phone}
-          onChange={(e) => handleChange('phone', e.target.value)}
-        />
-      </div>
-      <div style={{ marginBottom: 16 }}>
-        <label>Rol:</label>
-        <Select
-          value={editedUser.role}
-          onChange={(value) => handleChange('role', value)}
-          style={{ width: '100%' }}
-        >
-          <Option value="user">Usuario</Option>
-          <Option value="admin">Administrador</Option>
-          <Option value="moderator">Moderador</Option>
-        </Select>
-      </div>
-      <div style={{ marginBottom: 16 }}>
-        <label>Contraseña:</label>
-        <Password
-          value={editedUser.password}
-          onChange={(e) => handleChange('password', e.target.value)}
-          placeholder="Ingresa una contraseña segura"
-          disabled={!!user} // Deshabilitado en modo edición para no modificar contraseña existente
-        />
-      </div>
-      <div style={{ marginBottom: 16 }}>
-        <label>Estado:</label>
-        <Switch
-          checked={editedUser.status}
-          onChange={(checked) => handleChange('status', checked)}
-        />
-      </div>
+      <Form layout="vertical">
+        <Form.Item label="Nombre" required>
+          <Input
+            placeholder="Nombre completo"
+            value={editedUser.name}
+            onChange={(e) => handleChange('name', e.target.value)}
+          />
+        </Form.Item>
+
+        <Form.Item label="Correo electrónico" required>
+          <Input
+            type="email"
+            placeholder="correo@ejemplo.com"
+            value={editedUser.email}
+            onChange={(e) => handleChange('email', e.target.value)}
+          />
+        </Form.Item>
+
+        <Form.Item label="Teléfono">
+          <Input
+            placeholder="Ej. 5551234567"
+            value={editedUser.phone}
+            onChange={(e) => handleChange('phone', e.target.value)}
+          />
+        </Form.Item>
+
+        <Form.Item label="Rol" required>
+          <Select
+            value={editedUser.role}
+            onChange={(value) => handleChange('role', value)}
+            placeholder="Selecciona un rol"
+          >
+            <Option value="user">Usuario</Option>
+            <Option value="admin">Administrador</Option>
+            <Option value="moderator">Moderador</Option>
+          </Select>
+        </Form.Item>
+
+        <Form.Item label="Contraseña" help={user ? 'No se puede cambiar en modo edición' : ''}>
+          <Password
+            placeholder="Ingresa una contraseña segura"
+            value={editedUser.password}
+            onChange={(e) => handleChange('password', e.target.value)}
+            disabled={!!user}
+          />
+        </Form.Item>
+
+        <Form.Item label="Estado">
+          <Switch
+            checked={editedUser.status}
+            onChange={(checked) => handleChange('status', checked)}
+            checkedChildren="Activo"
+            unCheckedChildren="Inactivo"
+          />
+        </Form.Item>
+      </Form>
     </Modal>
   );
 }
