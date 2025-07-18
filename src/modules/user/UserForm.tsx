@@ -1,9 +1,9 @@
+
 import { useState, useEffect } from 'react';
 import { Table, Typography, Input, Button } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import Swal from 'sweetalert2';
 import UserEditModal from './UserEditModal'; // Ajusta la ruta según tu estructura
-
 
 export default function UserList() {
   const [users, setUsers] = useState<any[]>([]);
@@ -12,53 +12,52 @@ export default function UserList() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedUser, setSelectedUser] = useState<any>(null);
 
-// Definir las columnas de la tabla
-const columns: ColumnsType<any> = [
-  {
-    title: 'Nombre',
-    dataIndex: 'name',
-    key: 'name',
-  },
-  {
-    title: 'Correo',
-    dataIndex: 'email',
-    key: 'email',
-  },
-  {
-    title: 'Teléfono',
-    dataIndex: 'phone',
-    key: 'phone',
-  },
-  {
-    title: 'Rol',
-    dataIndex: 'role',
-    key: 'role',
-    render: (role: string) => {
-      const roleLabels: { [key: string]: string } = {
-        user: 'Usuario',
-        admin: 'Administrador',
-        moderator: 'Moderador',
-      };
-      return role ? roleLabels[role] || role : 'Sin rol';
+  // Definir las columnas de la tabla
+  const columns: ColumnsType<any> = [
+    {
+      title: 'Nombre',
+      dataIndex: 'name',
+      key: 'name',
     },
-  },
-  {
-    title: 'Estado',
-    dataIndex: 'status',
-    key: 'status',
-    render: (status: boolean) => (status ? 'Activo' : 'Inactivo'),
-  },
-  {
-    title: 'Acciones',
-    key: 'actions',
-    render: (_, record) => (
-      <span>
-        <a onClick={() => handleEditUser(record)}>Editar</a>
-      </span>
-    ),
-  },
-];
-
+    {
+      title: 'Correo',
+      dataIndex: 'email',
+      key: 'email',
+    },
+    {
+      title: 'Teléfono',
+      dataIndex: 'phone',
+      key: 'phone',
+    },
+    {
+      title: 'Rol',
+      dataIndex: 'role',
+      key: 'role',
+      render: (role: string) => {
+        const roleLabels: { [key: string]: string } = {
+          user: 'Usuario',
+          admin: 'Administrador',
+          moderator: 'Moderador',
+        };
+        return role ? roleLabels[role] || role : 'Sin rol';
+      },
+    },
+    {
+      title: 'Estado',
+      dataIndex: 'status',
+      key: 'status',
+      render: (status: boolean) => (status ? 'Activo' : 'Inactivo'),
+    },
+    {
+      title: 'Acciones',
+      key: 'actions',
+      render: (_, record) => (
+        <span>
+          <a onClick={() => handleEditUser(record)}>Editar</a>
+        </span>
+      ),
+    },
+  ];
 
   // Obtener usuarios del backend
   useEffect(() => {
@@ -119,6 +118,41 @@ const columns: ColumnsType<any> = [
 
   // Guardar cambios con conexión al backend
   const handleSave = async (editedUser: any) => {
+    // Validaciones para creación de usuario
+    if (!editedUser.id) {
+      // Validación de email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(editedUser.email)) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Por favor, ingresa un email válido (ejemplo: usuario@dominio.com).',
+        });
+        return;
+      }
+
+      // Validación de contraseña segura
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+      if (!passwordRegex.test(editedUser.password)) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'La contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula, una minúscula, un número y un carácter especial (ejemplo: !@#$%^&*).',
+        });
+        return;
+      }
+
+      // Validación de campos obligatorios
+      if (!editedUser.name || !editedUser.phone || !editedUser.role) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Por favor, completa todos los campos obligatorios (Nombre, Teléfono, Rol).',
+        });
+        return;
+      }
+    }
+
     try {
       let response;
       if (!editedUser.id) {
@@ -130,12 +164,12 @@ const columns: ColumnsType<any> = [
             name: editedUser.name,
             email: editedUser.email,
             phone: editedUser.phone,
-            password: '1234',
+            password: editedUser.password,
             role: {
               roleType: editedUser.role,
               description: editedUser.role === 'admin' ? 'Usuario administrador con permisos completos' : 'Rol estándar',
             },
-            status: editedUser.status,
+            status: true, // Estado activo por defecto
           }),
         });
       } else {

@@ -1,6 +1,6 @@
-import { Modal, Input, Select, Switch, Button } from 'antd';
-import { useState, useEffect } from 'react';
-
+import  { useState, useEffect } from 'react';
+import { Modal, Input, Select, Switch, Button, Input as AntdInput } from 'antd';
+const { Password } = AntdInput;
 const { Option } = Select;
 
 interface UserEditModalProps {
@@ -18,6 +18,7 @@ export default function UserEditModal({ visible, user, onCancel, onSave }: UserE
     phone: '',
     role: '',
     status: false,
+    password: '',
   });
 
   useEffect(() => {
@@ -29,6 +30,7 @@ export default function UserEditModal({ visible, user, onCancel, onSave }: UserE
         phone: user.phone || '',
         role: user.role || '',
         status: user.status || false,
+        password: '', // No se edita la contraseña existente
       });
     } else {
       // Modo creación: inicializar con valores vacíos
@@ -39,6 +41,7 @@ export default function UserEditModal({ visible, user, onCancel, onSave }: UserE
         phone: '',
         role: '',
         status: false,
+        password: '',
       });
     }
   }, [user]);
@@ -97,6 +100,15 @@ export default function UserEditModal({ visible, user, onCancel, onSave }: UserE
           <Option value="admin">Administrador</Option>
           <Option value="moderator">Moderador</Option>
         </Select>
+      </div>
+      <div style={{ marginBottom: 16 }}>
+        <label>Contraseña:</label>
+        <Password
+          value={editedUser.password}
+          onChange={(e) => handleChange('password', e.target.value)}
+          placeholder="Ingresa una contraseña segura"
+          disabled={!!user} // Deshabilitado en modo edición para no modificar contraseña existente
+        />
       </div>
       <div style={{ marginBottom: 16 }}>
         <label>Estado:</label>

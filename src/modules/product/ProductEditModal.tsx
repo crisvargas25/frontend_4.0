@@ -82,6 +82,7 @@ export default function ProductEditModal({ visible, product, onCancel, onSave }:
         <label>Cantidad:</label>
         <Input
           type="number"
+          min={0}
           value={editedProduct.quantity}
           onChange={(e) => handleChange('quantity', parseInt(e.target.value) || 0)}
         />
@@ -90,6 +91,7 @@ export default function ProductEditModal({ visible, product, onCancel, onSave }:
         <label>Precio:</label>
         <Input
           type="number"
+          min={0}
           value={editedProduct.price}
           onChange={(e) => handleChange('price', parseFloat(e.target.value) || 0)}
         />
